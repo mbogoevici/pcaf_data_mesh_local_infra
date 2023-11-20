@@ -24,7 +24,7 @@ x-airflow-common:
 
     AIRFLOW__LINEAGE__AIRFLOW_SERVICE_NAME: 'airflow'
     AIRFLOW__LINEAGE__AUTH_PROVIDER_TYPE: 'openmetadata'
-    AIRFLOW__LINEAGE__JWT_TOKEN: 'eyJraWQiOiJHYjM4OWEtOWY3Ni1nZGpzLWE5MmotMDI0MmJrOTQzNTYiLCJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJvcGVuLW1ldGFkYXRhLm9yZyIsInN1YiI6ImluZ2VzdGlvbi1ib3QiLCJlbWFpbCI6ImluZ2VzdGlvbi1ib3RAb3Blbm1ldGFkYXRhLm9yZyIsImlzQm90Ijp0cnVlLCJ0b2tlblR5cGUiOiJCT1QiLCJpYXQiOjE2OTgzNjY0MzksImV4cCI6bnVsbH0.Z_MtZySWQf1fUcTSwZuE1NA0XHiiyQHHhcZEjtPfoWJTpisUPBLCLedNL7k1n6GNz8iAW6SCcCwp3vZIZby_ukP2ZgksiLGicIp4VXxhQTlbmDqlDE1x9yJdoxXc72fNlMFlFMP-LphmgM7jcWSQ4HyXEoSkb03tZCZ49eff8JUwVSPrg-QG2Eze68ACqqRchQjJx8UbBekJhQ3qt_lTYf-MPs2dVzTaLsXqTeLuBc9b5S_XpXCMQHS50z4i-rOM3iHssSXzf1coC6tJNwlMQMmIcMqKoL71A2BBaDTR1QVxuKe5nMwwrzKVFz5HIP3CIe1R7YVqRTgBRWFpZTSc4g'
+    AIRFLOW__LINEAGE__JWT_TOKEN: 'eyJraWQiOiJHYjM4OWEtOWY3Ni1nZGpzLWE5MmotMDI0MmJrOTQzNTYiLCJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJvcGVuLW1ldGFkYXRhLm9yZyIsInN1YiI6ImluZ2VzdGlvbi1ib3QiLCJlbWFpbCI6ImluZ2VzdGlvbi1ib3RAb3Blbm1ldGFkYXRhLm9yZyIsImlzQm90Ijp0cnVlLCJ0b2tlblR5cGUiOiJCT1QiLCJpYXQiOjE3MDAxNzAzNzksImV4cCI6bnVsbH0.RAPUwW2ALpcHNIo2sWuCG-E-gisrexncn8mI4snGXDLPEEhIDn0SXry2YFwg6DGBb-PtwrLp51i6NzGLojjuTQfi_CNEjAPjz6mCnBT6GwjyIr_tjtlVFY7GB1LK7kVJa25yWo0Uv1vmDk3jCe24hbCftnriKRI9H2G5Dll_8XicPwkS6lUZ5JBoFkRlhP8h8p4m76E28jGoGTUxOQom2zvGMHUJ7ohuKPjCvYwPsMfYA1kqxXcA8Y5c8_JNofsJ0jdhY487AGNH2g69VBgLZs-dIZpThzS7b0bOk_uzUk5_c-frlk-AogRPfBc8l27uInVfU6TlW-23v7Q4DcGWQg'
     AIRFLOW__LINEAGE__OPENMETADATA_API_ENDPOINT: 'http://openmetadata_server:8585/api'
 
     # yamllint disable rule:line-length
@@ -326,7 +326,8 @@ services:
 
   postgresql:
     container_name: openmetadata_postgresql
-    image: docker.getcollate.io/openmetadata/postgresql:1.1.7
+    #image: docker.getcollate.io/openmetadata/postgresql:1.1.7
+    image: docker.getcollate.io/openmetadata/postgresql:1.2.0
     restart: always
     command: "--work_mem=10MB"
     environment:
@@ -338,6 +339,8 @@ services:
       - "5433:5432"
     volumes:
      - ./docker-volume/db-data-postgre:/var/lib/postgresql/data
+
+     
     
     # networks:
     #   - app_net
@@ -349,7 +352,8 @@ services:
 
   elasticsearch:
     container_name: openmetadata_elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    # image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms1024m -Xmx1024m
@@ -363,7 +367,8 @@ services:
 
   execute-migrate-all:
     container_name: execute_migrate_all
-    image: docker.getcollate.io/openmetadata/server:1.1.7
+    # image: docker.getcollate.io/openmetadata/server:1.1.7
+    image: docker.getcollate.io/openmetadata/server:1.2.0
     command: "./bootstrap/bootstrap_storage.sh migrate-all"
     environment:
       OPENMETADATA_CLUSTER_NAME: ${OPENMETADATA_CLUSTER_NAME:-openmetadata}
@@ -521,7 +526,8 @@ services:
   openmetadata-server:
     container_name: openmetadata_server
     restart: always
-    image: docker.getcollate.io/openmetadata/server:1.1.7
+    # image: docker.getcollate.io/openmetadata/server:1.1.7
+    image: docker.getcollate.io/openmetadata/server:1.2.0
     environment:
       OPENMETADATA_CLUSTER_NAME: ${OPENMETADATA_CLUSTER_NAME:-openmetadata}
       SERVER_PORT: ${SERVER_PORT:-8585}
